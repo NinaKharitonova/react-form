@@ -2,14 +2,31 @@ import { useState } from "react";
 
 function App() {
   const [titleSection, useTitleSection] = useState("");
-  const articleList = [];
+  const [articleList, setArticleList] = useState([]);
 
   const formPostSubmit = (e) => {
     e.preventDefault();
+
+    if (!titleSection) return;
+
+    const newArticle = {
+      title: titleSection,
+    };
+
+    const newArticleList = [...articleList, newArticle];
+    setArticleList(newArticleList);
+    useTitleSection("");
   };
 
   const titleCange = (e) => {
     useTitleSection(e.target.value);
+  };
+
+  const deletePost = (deleteIndex) => {
+    const newArticleListButton = articleList.filter(
+      (article, articleIndex) => articleIndex !== deleteIndex
+    );
+    setArticleList(newArticleListButton);
   };
 
   return (
@@ -40,11 +57,16 @@ function App() {
 
         <section className="py-3">
           <h4>Post List</h4>
-          <div className="row">
+          <div className="row ">
             {articleList.length ? (
-              articleList.map((article) => (
-                <div className="col-6">
+              articleList.map((article, index) => (
+                <div key={index} className="col-6 py-3">
                   <div className="card">
+                    <button
+                      onClick={() => deletePost(index)}
+                      type="button"
+                      className="btn-close"
+                    ></button>
                     <div className="card-body">
                       <h5>{article.title}</h5>
                     </div>
